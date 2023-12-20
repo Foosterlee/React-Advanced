@@ -25,7 +25,7 @@ const AddEvent = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Zoek de maker en categorie op basis van de geselecteerde naam
+    // Zoek de maker en categorie op basis van de ingevulde namen
     const creator = creators.find((c) => c.name === newEvent.creator);
     const category = categories.find((c) => c.name === newEvent.category);
 
@@ -39,7 +39,11 @@ const AddEvent = ({
       });
 
       // Roep handleAddEvent aan met de bijgewerkte newEvent
-      handleAddEvent(newEvent);
+      handleAddEvent({
+        ...newEvent,
+        createdBy: creator.id,
+        categoryIds: [category.id],
+      });
 
       // Reset de form fields
       setNewEvent({
