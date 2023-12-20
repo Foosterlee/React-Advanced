@@ -136,7 +136,7 @@ const EventPage = () => {
   };
 
   return (
-    <>
+    <Box mx="auto">
       <Image
         src={event?.image}
         alt={event?.title || "No Title"}
@@ -145,24 +145,23 @@ const EventPage = () => {
         h="350px"
         pb="4"
       />
-
       <Stack align="center" pb="2" mt="4">
         <Heading p="4" textAlign="center">
           {event?.title || "No Title"}
         </Heading>
 
-        <Box color="teal" borderRadius="md" fontStyle="italic">
-          <Text>{event?.description || "No Description"}</Text>
-        </Box>
-
-        <Flex
-          direction={{ base: "column", md: "row" }}
-          align="center"
-          spacing="-10"
-          mb="4"
-        >
-          <Box bg="blackAlpha.50" p="4" borderRadius="md" flex="1" mb="4">
-            <Flex direction="column" align="center" spacing="2">
+        <Flex direction={{ base: "column", md: "row" }} align="center" mb="4">
+          <Box
+            bg="blackAlpha.50"
+            p="5"
+            borderRadius="md"
+            flex="1"
+            mb={{ base: "4", md: "0" }} // Add this line to adjust margin-bottom
+          >
+            <Box color="teal" borderRadius="md" fontStyle="italic">
+              <Text>{event?.description || "No Description"}</Text>
+            </Box>
+            <Flex direction="column" align="center">
               <Text fontWeight="bold">Event Time</Text>
               <Text>
                 Starts:{" "}
@@ -204,7 +203,14 @@ const EventPage = () => {
             </Flex>
           </Box>
 
-          <Box bg="blackAlpha.50" p={4} borderRadius="md" flex="1" mt="4">
+          <Box
+            bg="blackAlpha.50"
+            p={4}
+            borderRadius="md"
+            flex="1"
+            mt="4"
+            ml={{ base: "0", md: "20" }}
+          >
             <Stack spacing={4} align="center">
               <Text fontWeight="bold" fontSize="xl" color="gray.600">
                 Created{" "}
@@ -224,7 +230,6 @@ const EventPage = () => {
           </Box>
         </Flex>
       </Stack>
-
       <Stack
         direction={{ base: "column", md: "row" }}
         spacing={4}
@@ -239,7 +244,6 @@ const EventPage = () => {
           Delete
         </Button>
       </Stack>
-
       <EditEvent
         isOpen={editModalOpen}
         onClose={handleEditModalClose}
@@ -247,13 +251,12 @@ const EventPage = () => {
         editedEvent={editedEvent}
         categories={categories}
       />
-
       <DeleteEvent
         isOpen={deleteModalOpen}
         onClose={handleDeleteModalClose}
         onDeleteEvent={handleDeleteEvent}
       />
-    </>
+    </Box>
   );
 };
 
