@@ -21,7 +21,22 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
 
   const formatDateTime = (dateTimeString) => {
     // Assuming dateTimeString is in ISO 8601 format
-    return dateTimeString ? dateTimeString.slice(0, 16) : "";
+    const dateObject = new Date(dateTimeString);
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1; // January is 0!
+    const year = dateObject.getFullYear();
+
+    const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
+      day < 10 ? "0" : ""
+    }${day}`;
+
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+    const formattedTime = `${hours < 10 ? "0" : ""}${hours}:${
+      minutes < 10 ? "0" : ""
+    }${minutes}`;
+
+    return `${formattedDate}T${formattedTime}`;
   };
 
   useEffect(() => {
@@ -56,7 +71,47 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onEditEvent(formData);
+
+    // Zoek de maker en categorie op basis van de ingevulde namen
+    const creator =
+      formData.createdBy &&
+      users.find((user) => user.name === formData.createdBy);
+
+    const category =
+      formData.category && categories.find((c) => c.name === formData.category);
+
+    // Als de maker en categorie zijn gevonden, gebruik hun id's
+    if (creator) {
+      // Voer onEditEvent uit met de bijgewerkte formData
+      onEditEvent({
+        ...formData,
+        startTime: formatDateTime(new Date(formData.startTime)),
+        endTime: formatDateTime(new Date(formData.endTime)),
+        createdBy: creator.id,
+        categoryIds: category ? [category.id] : [],
+      });
+    } else {
+      // Voer onEditEvent uit met de bijgewerkte formData zonder de creator en categorie
+      onEditEvent({
+        ...formData,
+        startTime: formatDateTime(new Date(formData.startTime)),
+        endTime: formatDateTime(new Date(formData.endTime)),
+        categoryIds: category ? [category.id] : [],
+      });
+    }
+
+    // Reset de form fields
+    setFormData({
+      title: "",
+      description: "",
+      startTime: "",
+      endTime: "",
+      category: "",
+      createdBy: "",
+      image: "",
+    });
+
+    // Sluit het modal
     onClose();
   };
 
