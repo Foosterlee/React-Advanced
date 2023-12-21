@@ -21,7 +21,6 @@ const DeleteEvent = ({ onClose, onDeleteEvent }) => {
 
   const handleConfirmDelete = async () => {
     try {
-      // Voeg hier de logica toe om het evenement daadwerkelijk te verwijderen
       await onDeleteEvent();
       toast({
         title: "Event deleted",
