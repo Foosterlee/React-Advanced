@@ -4,6 +4,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   FormControl,
@@ -12,56 +13,50 @@ import {
   Textarea,
   Select,
 } from "@chakra-ui/react";
+import { Checkbox, CheckboxGroup } from "@chakra-ui/react"; // Add this import
+import { emtpyEvent } from "../utils/Events";
+import { CategoryContext } from "./CategoryContext";
+import { formatDatePicker } from "../utils/Formatting";
+import { useContext } from "react";
 
 const AddEvent = ({
   isOpen,
   onClose,
   setNewEvent,
   newEvent,
-  categories,
-  creators,
   handleAddEvent,
+  users,
 }) => {
+  const { categories } = useContext(CategoryContext);
+  if (!users) {
+    return null;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Zoek de maker en categorie op basis van de ingevulde namen
-    const creator = creators.find((c) => c.name === newEvent.creator);
-    const category = categories.find((c) => c.name === newEvent.category);
+    handleAddEvent({
+      ...newEvent,
+      startTime: new Date(newEvent.startTime).toISOString(),
+      endTime: new Date(newEvent.endTime).toISOString(),
+      createdBy: Number(newEvent.createdBy),
+      categoryIds: newEvent.categoryIds.map((x) =>
+        Number(categories.find((c) => c.name === x).id)
+      ),
+    });
 
-    // Als de maker en categorie zijn gevonden, gebruik hun id's
-    if (creator && category) {
-      // Hier moeten we 'setNewEvent' aanpassen om de juiste velden in te stellen
-      setNewEvent({
-        ...newEvent,
-        createdBy: creator.id,
-        categoryIds: [category.id],
-      });
+    // Reset the form fields
+    setNewEvent(emtpyEvent);
 
-      // Roep handleAddEvent aan met de bijgewerkte newEvent
-      handleAddEvent({
-        ...newEvent,
-        createdBy: creator.id,
-        categoryIds: [category.id],
-      });
+    // Close the modal
+    onClose();
+  };
 
-      // Reset de form fields
-      setNewEvent({
-        title: "",
-        description: "",
-        startTime: "",
-        endTime: "",
-        category: "",
-        creator: "",
-        image: "",
-      });
-
-      // Sluit het modal
-      onClose();
-    } else {
-      // Toon een foutmelding als de maker of categorie niet is gevonden
-      console.error("Creator or category not found");
-    }
+  const handleInputChange = (field, value) => {
+    setNewEvent((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
   return (
@@ -76,19 +71,19 @@ const AddEvent = ({
               <FormLabel>Title</FormLabel>
               <Input
                 type="text"
+                placeholder="Enter event title"
                 value={newEvent.title}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, title: e.target.value })
-                }
+                onChange={(e) => handleInputChange("title", e.target.value)}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Description</FormLabel>
               <Textarea
+                placeholder="Enter event description"
                 value={newEvent.description}
                 onChange={(e) =>
-                  setNewEvent({ ...newEvent, description: e.target.value })
+                  handleInputChange("description", e.target.value)
                 }
               />
             </FormControl>
@@ -97,13 +92,8 @@ const AddEvent = ({
               <FormLabel>Start Time</FormLabel>
               <Input
                 type="datetime-local"
-                value={newEvent.startTime}
-                onChange={(e) =>
-                  setNewEvent({
-                    ...newEvent,
-                    startTime: e.target.value,
-                  })
-                }
+                value={formatDatePicker(newEvent.startTime)}
+                onChange={(e) => handleInputChange("startTime", e.target.value)}
               />
             </FormControl>
 
@@ -111,46 +101,37 @@ const AddEvent = ({
               <FormLabel>End Time</FormLabel>
               <Input
                 type="datetime-local"
-                value={newEvent.endTime}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, endTime: e.target.value })
-                }
+                value={formatDatePicker(newEvent.endTime)}
+                onChange={(e) => handleInputChange("endTime", e.target.value)}
               />
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Category</FormLabel>
-              <Select
-                value={newEvent.category || ""}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, category: e.target.value })
-                }
+              <CheckboxGroup
+                isInline
+                spacing={16}
+                variantColor="teal"
+                value={newEvent.categoryIds || []}
+                onChange={(values) => handleInputChange("categoryIds", values)}
               >
-                <option value="" disabled>
-                  Select a category
-                </option>
                 {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
+                  <Checkbox key={category.id} value={category.name}>
                     {category.name}
-                  </option>
+                  </Checkbox>
                 ))}
-              </Select>
+              </CheckboxGroup>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Creator</FormLabel>
               <Select
-                value={newEvent.creator || ""}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, creator: e.target.value })
-                }
+                value={newEvent.createdBy}
+                onChange={(e) => handleInputChange("createdBy", e.target.value)}
               >
-                <option value="" disabled>
-                  Select a creator
-                </option>
-                {creators.map((creator) => (
-                  <option key={creator.id} value={creator.name}>
-                    {creator.name}
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
                   </option>
                 ))}
               </Select>
@@ -167,9 +148,12 @@ const AddEvent = ({
               />
             </FormControl>
 
-            <Button mt={6} colorScheme="teal" type="submit">
-              Add Event
-            </Button>
+            <ModalFooter>
+              <Button colorScheme="teal" mr={3} type="submit">
+                Add Event
+              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
           </form>
         </ModalBody>
       </ModalContent>
