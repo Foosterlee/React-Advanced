@@ -9,7 +9,7 @@ const EventsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [events, setEvents] = useState([]);
-  const [creators, setCreators] = useState([]);
+  const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -18,8 +18,8 @@ const EventsPage = () => {
     description: "",
     startTime: "",
     endTime: "",
-    category: "",
-    creator: "",
+    categoryIds: [],
+    createdBy: 0,
     image: "",
   });
 
@@ -37,9 +37,9 @@ const EventsPage = () => {
       const eventsData = await eventsResponse.json();
       setEvents(eventsData);
 
-      const creatorsResponse = await fetch("http://localhost:3000/users");
-      const creatorsData = await creatorsResponse.json();
-      setCreators(creatorsData);
+      const usersResponse = await fetch("http://localhost:3000/users");
+      const usersData = await usersResponse.json();
+      setUsers(usersData);
 
       setLoading(false);
     } catch (error) {
@@ -84,8 +84,8 @@ const EventsPage = () => {
         description: "",
         startTime: "",
         endTime: "",
-        category: "",
-        creator: "",
+        categoryIds: [],
+        createdBy: null,
         image: "",
       });
 
@@ -143,8 +143,8 @@ const EventsPage = () => {
           setNewEvent={setNewEvent}
           newEvent={newEvent}
           categories={categories}
-          creators={creators}
           handleAddEvent={handleAddEvent} // Pass the function as a prop
+          users={users}
         />
       </VStack>
     </Container>

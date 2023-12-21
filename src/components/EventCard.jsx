@@ -3,23 +3,7 @@
 import React from "react";
 import { Box, Heading, Text, HStack, Tag, Center } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
-const formatDate = (dateTimeString) => {
-  const options = {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  };
-  const date = new Date(dateTimeString);
-  return date.toLocaleDateString("en-US", options).replace(/\//g, "-");
-};
-
-const formatTime = (dateTimeString) => {
-  const date = new Date(dateTimeString);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
-};
+import { formatDateTime } from "../utils/Formatting";
 
 const EventCard = ({ event, categories }) => {
   return (
@@ -56,14 +40,13 @@ const EventCard = ({ event, categories }) => {
           </Text>
           <HStack justify="center" spacing="10" mt="6" mb="5">
             <Text>
-              {formatDate(event.startTime)} <br />
-              {formatTime(event.startTime)}
+              {formatDateTime(event.startTime)}
             </Text>
             <Text fontSize="2xl" fontWeight="bold" color="teal.500">
               -
             </Text>
             <Text>
-              {formatDate(event.endTime)} <br /> {formatTime(event.endTime)}
+              {formatDateTime(event.endTime)}
             </Text>
           </HStack>
           <Center>

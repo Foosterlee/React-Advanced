@@ -13,6 +13,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import EditEvent from "../components/EditEvent";
 import DeleteEvent from "../components/DeleteEvent";
+import { formatDateTime } from "../utils/Formatting";
 
 export const loader = async ({ params }) => {
   const categoriesResponse = await fetch("http://localhost:3000/categories");
@@ -166,38 +167,18 @@ const EventPage = () => {
               <Text fontWeight="bold">Starts:</Text>
               <Text>
                 {event?.startTime
-                  ? new Date(event.startTime).toLocaleString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
-                  : "Not specified"}
-                {" at "}
-                {event?.startTime &&
-                  new Date(event.startTime).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  ? formatDateTime(event.startTime, " at ")
+                  : "Not specified"
+                }
               </Text>
               <Text fontWeight="bold" mt="4">
                 Ends:
               </Text>
               <Text mb="3">
                 {event?.endTime
-                  ? new Date(event.endTime).toLocaleString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
-                  : "Not specified"}
-                {" at "}
-                {event?.endTime &&
-                  new Date(event.endTime).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  ? formatDateTime(event.endTime, " at ")
+                  : "Not specified"
+                }
               </Text>
               <HStack spacing="1" mt="4">
                 {event?.categoryIds &&

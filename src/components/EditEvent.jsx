@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import {
+  Button,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -7,60 +8,30 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
-  Select,
 } from "@chakra-ui/react";
 import { CategoryContext } from "./CategoryContext";
+import { EventWithData, emtpyEvent } from "../utils/Events";
+import EventForm from "./EventForm";
 
-const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
+const EditEvent = ({
+  isOpen,
+  onClose,
+  onEditEvent,
+  editedEvent
+}) => {
   const { categories, users } = useContext(CategoryContext);
-
-  const formatDateTime = (dateTimeString) => {
-    // Assuming dateTimeString is in ISO 8601 format
-    const dateObject = new Date(dateTimeString);
-    const day = dateObject.getDate();
-    const month = dateObject.getMonth() + 1; // January is 0!
-    const year = dateObject.getFullYear();
-
-    const formattedDate = `${year}-${month < 10 ? "0" : ""}${month}-${
-      day < 10 ? "0" : ""
-    }${day}`;
-
-    const hours = dateObject.getHours();
-    const minutes = dateObject.getMinutes();
-    const formattedTime = `${hours < 10 ? "0" : ""}${hours}:${
-      minutes < 10 ? "0" : ""
-    }${minutes}`;
-
-    return `${formattedDate}T${formattedTime}`;
-  };
 
   useEffect(() => {
     // Set initial form data when the modal is opened
+    const data = EventWithData(editedEvent)
+    // console.log("data", data)
     setFormData({
-      title: editedEvent?.title || "",
-      description: editedEvent?.description || "",
-      startTime: formatDateTime(editedEvent?.startTime) || "",
-      endTime: formatDateTime(editedEvent?.endTime) || "",
-      category: editedEvent?.category || "",
-      createdBy: editedEvent?.createdBy || "",
-      image: editedEvent?.image || "",
+      ...data,
+      categoryIds: data.categoryIds?.map(x => categories.find(c => c.id == x).name) || []
     });
   }, [editedEvent]);
 
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    startTime: "",
-    endTime: "",
-    category: "",
-    createdBy: "",
-    image: "",
-  });
+  const [formData, setFormData] = useState(emtpyEvent);
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({
@@ -71,45 +42,17 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Zoek de maker en categorie op basis van de ingevulde namen
-    const creator =
-      formData.createdBy &&
-      users.find((user) => user.name === formData.createdBy);
-
-    const category =
-      formData.category && categories.find((c) => c.name === formData.category);
-
-    // Als de maker en categorie zijn gevonden, gebruik hun id's
-    if (creator) {
-      // Voer onEditEvent uit met de bijgewerkte formData
-      onEditEvent({
-        ...formData,
-        startTime: formatDateTime(new Date(formData.startTime)),
-        endTime: formatDateTime(new Date(formData.endTime)),
-        createdBy: creator.id,
-        categoryIds: category ? [category.id] : [],
-      });
-    } else {
-      // Voer onEditEvent uit met de bijgewerkte formData zonder de creator en categorie
-      onEditEvent({
-        ...formData,
-        startTime: formatDateTime(new Date(formData.startTime)),
-        endTime: formatDateTime(new Date(formData.endTime)),
-        categoryIds: category ? [category.id] : [],
-      });
-    }
+    // Voer onEditEvent uit met de bijgewerkte formData
+    onEditEvent({
+      ...formData,
+      startTime: new Date(formData.startTime).toISOString(),
+      endTime: new Date(formData.endTime).toISOString(),
+      createdBy: Number(formData.createdBy),
+      categoryIds: formData.categoryIds.map(x => Number(categories.find(c => c.name == x).id)),
+    });
 
     // Reset de form fields
-    setFormData({
-      title: "",
-      description: "",
-      startTime: "",
-      endTime: "",
-      category: "",
-      createdBy: "",
-      image: "",
-    });
+    setFormData(emtpyEvent);
 
     // Sluit het modal
     onClose();
@@ -123,77 +66,10 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit}>
-            <FormControl mt={4}>
-              <FormLabel>Title</FormLabel>
-              <Input
-                type="text"
-                placeholder="Enter event title"
-                value={formData.title}
-                onChange={(e) => handleInputChange("title", e.target.value)}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                placeholder="Enter event description"
-                value={formData.description}
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Start Time</FormLabel>
-              <Input
-                type="datetime-local"
-                value={formData.startTime}
-                onChange={(e) => handleInputChange("startTime", e.target.value)}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>End Time</FormLabel>
-              <Input
-                type="datetime-local"
-                value={formData.endTime}
-                onChange={(e) => handleInputChange("endTime", e.target.value)}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Category</FormLabel>
-              <Select
-                value={formData.category}
-                onChange={(e) => handleInputChange("category", e.target.value)}
-              >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Created By</FormLabel>
-              <Select
-                value={formData.createdBy}
-                onChange={(e) => handleInputChange("createdBy", e.target.value)}
-              >
-                {users.map((user) => (
-                  <option key={user.id} value={user.name}>
-                    {user.name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            {formData.image && (
-              <FormControl mt={4}>
-                <FormLabel>Existing Photo</FormLabel>
-                <img
-                  src={formData.image}
-                  alt="Event"
-                  style={{ maxWidth: "100%" }}
-                />
-              </FormControl>
-            )}
+            <EventForm
+              formData={formData}
+              handleInputChange={handleInputChange}
+            />
             <ModalFooter>
               <Button colorScheme="teal" mr={3} type="submit">
                 Save
@@ -203,7 +79,7 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
           </form>
         </ModalBody>
       </ModalContent>
-    </Modal>
+    </Modal >
   );
 };
 
