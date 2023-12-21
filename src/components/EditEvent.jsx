@@ -63,9 +63,13 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
   });
 
   const handleInputChange = (field, value) => {
+    // Convert createdBy value to a number if it's not an empty string
+    const updatedValue =
+      field === "createdBy" && value !== "" ? Number(value) : value;
+
     setFormData((prevData) => ({
       ...prevData,
-      [field]: value,
+      [field]: updatedValue,
     }));
   };
 
@@ -164,6 +168,9 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
                 value={formData.category}
                 onChange={(e) => handleInputChange("category", e.target.value)}
               >
+                <option value="" disabled>
+                  Select a category
+                </option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.name}>
                     {category.name}
@@ -177,8 +184,11 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
                 value={formData.createdBy}
                 onChange={(e) => handleInputChange("createdBy", e.target.value)}
               >
+                <option value="" disabled>
+                  Select a creator
+                </option>
                 {users.map((user) => (
-                  <option key={user.id} value={user.name}>
+                  <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
                 ))}
