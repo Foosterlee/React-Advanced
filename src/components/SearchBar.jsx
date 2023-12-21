@@ -1,4 +1,3 @@
-// SearchBar.jsx
 import React from "react";
 import { Input, Box } from "@chakra-ui/react";
 
