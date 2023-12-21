@@ -145,8 +145,8 @@ const EventPage = () => {
         h="350px"
         pb="4"
       />
-      <Stack align="center" pb="2" mt="4" mb="4">
-        <Heading p="4" textAlign="center" mb="4">
+      <Stack align="center" mt="4" mb="4">
+        <Heading p="4" textAlign="center" mb="8">
           {event?.title || "No Title"}
         </Heading>
 
