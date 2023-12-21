@@ -1,13 +1,15 @@
 import React from "react";
-import { Outlet, Link, useLoaderData } from "react-router-dom"; // Voeg useLoaderData toe
+import { Outlet, Link, useLoaderData } from "react-router-dom";
 import { Box, Container, Heading, Text } from "@chakra-ui/react";
 import { CategoryContext } from "./CategoryContext";
 
 export const loader = async () => {
-  const categories = await fetch("http://localhost:3000/categories");
-  const users = await fetch("http://localhost:3000/users");
+  const [categories, users] = await Promise.all([
+    fetch("http://localhost:3000/categories").then((res) => res.json()),
+    fetch("http://localhost:3000/users").then((res) => res.json()),
+  ]);
 
-  return { categories: await categories.json(), users: await users.json() };
+  return { categories, users };
 };
 
 export const Root = () => {
