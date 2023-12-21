@@ -145,47 +145,60 @@ const EventPage = () => {
         h="350px"
         pb="4"
       />
-      <Stack align="center" pb="2" mt="4">
-        <Heading p="4" textAlign="center">
+      <Stack align="center" pb="2" mt="4" mb="4">
+        <Heading p="4" textAlign="center" mb="4">
           {event?.title || "No Title"}
         </Heading>
 
-        <Flex direction={{ base: "column", md: "row" }} align="center" mb="4">
+        <Flex direction={{ base: "column", md: "row" }} mb="4">
           <Box
-            bg="blackAlpha.50"
+            bg="blackAlpha.50" // Achtergrondkleur voor het linkerblok
             p="5"
             borderRadius="md"
-            flex="1"
-            mb={{ base: "4", md: "0" }} // Add this line to adjust margin-bottom
+            flex="2" // Breedte van het linkerblok
+            boxShadow="md"
+            mb={{ base: "4", md: "0" }}
           >
-            <Box color="teal" borderRadius="md" fontStyle="italic">
+            <Box color="teal" borderRadius="md" fontStyle="italic" mb="4">
               <Text>{event?.description || "No Description"}</Text>
             </Box>
-            <Flex direction="column" align="center">
-              <Text fontWeight="bold">Event Time</Text>
+            <Flex direction="column" align="center" mt="4">
+              <Text fontWeight="bold">Starts:</Text>
               <Text>
-                Starts:{" "}
                 {event?.startTime
-                  ? new Date(event.startTime).toLocaleDateString()
-                  : "Not specified"}{" "}
+                  ? new Date(event.startTime).toLocaleString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Not specified"}
+                {" at "}
                 {event?.startTime &&
-                  new Date(event.startTime).toLocaleTimeString([], {
+                  new Date(event.startTime).toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
               </Text>
-              <Text>
-                Ends:{" "}
+              <Text fontWeight="bold" mt="4">
+                Ends:
+              </Text>
+              <Text mb="3">
                 {event?.endTime
-                  ? new Date(event.endTime).toLocaleDateString()
-                  : "Not specified"}{" "}
+                  ? new Date(event.endTime).toLocaleString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Not specified"}
+                {" at "}
                 {event?.endTime &&
-                  new Date(event.endTime).toLocaleTimeString([], {
+                  new Date(event.endTime).toLocaleTimeString("en-US", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
               </Text>
-
               <HStack spacing="1" mt="4">
                 {event?.categoryIds &&
                   Array.isArray(event.categoryIds) &&
@@ -204,12 +217,13 @@ const EventPage = () => {
           </Box>
 
           <Box
-            bg="blackAlpha.50"
+            bg="blackAlpha.50" // Achtergrondkleur voor het rechterblok
             p={4}
             borderRadius="md"
-            flex="1"
-            mt="4"
-            ml={{ base: "0", md: "20" }}
+            flex="1" // Breedte van het rechterblok
+            mt={{ base: "4", md: "0" }}
+            ml={{ base: "0", md: "4" }}
+            boxShadow="md"
           >
             <Stack spacing={4} align="center">
               <Text fontWeight="bold" fontSize="xl" color="gray.600">
