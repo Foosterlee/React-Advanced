@@ -20,7 +20,6 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
   const { categories, users } = useContext(CategoryContext);
 
   const formatDateTime = (dateTimeString) => {
-    // Assuming dateTimeString is in ISO 8601 format
     const dateObject = new Date(dateTimeString);
     const day = dateObject.getDate();
     const month = dateObject.getMonth() + 1; // January is 0!
@@ -63,7 +62,6 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
   });
 
   const handleInputChange = (field, value) => {
-    // Convert createdBy value to a number if it's not an empty string
     const updatedValue =
       field === "createdBy" && value !== "" ? Number(value) : value;
 
@@ -86,7 +84,6 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
 
     // Als de maker en categorie zijn gevonden, gebruik hun id's
     if (creator) {
-      // Voer onEditEvent uit met de bijgewerkte formData
       onEditEvent({
         ...formData,
         startTime: formatDateTime(new Date(formData.startTime)),
@@ -95,7 +92,6 @@ const EditEvent = ({ isOpen, onClose, onEditEvent, editedEvent }) => {
         categoryIds: category ? [category.id] : [],
       });
     } else {
-      // Voer onEditEvent uit met de bijgewerkte formData zonder de creator en categorie
       onEditEvent({
         ...formData,
         startTime: formatDateTime(new Date(formData.startTime)),
