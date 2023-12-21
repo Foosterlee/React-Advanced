@@ -11,7 +11,7 @@ const formatDate = (dateTimeString) => {
     year: "numeric",
   };
   const date = new Date(dateTimeString);
-  return date.toLocaleDateString("en-US", options).replace(/\//g, "-");
+  return date.toLocaleDateString(options).replace(/\//g, "-");
 };
 
 const formatTime = (dateTimeString) => {
