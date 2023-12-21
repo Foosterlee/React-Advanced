@@ -1,5 +1,3 @@
-// EventCard.jsx
-
 import React from "react";
 import { Box, Heading, Text, HStack, Tag, Center } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
