@@ -12,6 +12,7 @@ import {
 import { CategoryContext } from "./CategoryContext";
 import { EventWithData, emtpyEvent } from "../utils/Events";
 import EventForm from "./EventForm";
+import { formatDatePicker } from "../utils/Formatting";
 
 const EditEvent = ({
   isOpen,
@@ -45,8 +46,8 @@ const EditEvent = ({
     // Voer onEditEvent uit met de bijgewerkte formData
     onEditEvent({
       ...formData,
-      startTime: new Date(formData.startTime).toISOString(),
-      endTime: new Date(formData.endTime).toISOString(),
+      startTime: formatDatePicker(formData.startTime),
+      endTime: formatDatePicker(formData.endTime),
       createdBy: Number(formData.createdBy),
       categoryIds: formData.categoryIds.map(x => Number(categories.find(c => c.name == x).id)),
     });

@@ -20,6 +20,6 @@ export const formatTime = (dateTimeString) => {
 
 export const formatDatePicker = (dateTimeString) => {
     if (dateTimeString == "" || dateTimeString == undefined) { return "" }
-    return new Date(dateTimeString).toISOString().substring(0, 23)
+    return new Date(dateTimeString).toISOString().substring(0, 16)
 };
 

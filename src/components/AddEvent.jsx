@@ -12,6 +12,7 @@ import { emtpyEvent } from "../utils/Events";
 import EventForm from "./EventForm";
 import { useContext } from "react";
 import { CategoryContext } from "./CategoryContext";
+import { formatDatePicker } from "../utils/Formatting";
 
 const AddEvent = ({
   isOpen,
@@ -28,8 +29,8 @@ const AddEvent = ({
     // Roep handleAddEvent aan met de bijgewerkte newEvent
     handleAddEvent({
       ...newEvent,
-      startTime: new Date(newEvent.startTime).toISOString(),
-      endTime: new Date(newEvent.endTime).toISOString(),
+      startTime: formatDatePicker(newEvent.startTime),
+      endTime: formatDatePicker(newEvent.endTime),
       createdBy: Number(newEvent.createdBy),
       categoryIds: newEvent.categoryIds.map(x => Number(categories.find(c => c.name == x).id)),
     });

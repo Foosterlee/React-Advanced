@@ -51,17 +51,16 @@
       "id": 3
     },
     {
-      "id": 4,
-      "createdBy": 2,
       "title": "Yoga",
       "description": "It's a bit of a stretch.",
-      "image": "https://ymcasouthflorida.org/wp-content/uploads/2019/12/AA2I8910-scaled.jpg",
+      "startTime": "2023-03-09T05:00:00.000Z",
+      "endTime": "2023-03-09T07:00:00.000Z",
       "categoryIds": [
         3
       ],
-      "location": "Shavasana Yoga School",
-      "startTime": "2023-03-09T06:00:00.000Z",
-      "endTime": "2023-03-09T07:00:00.000Z"
+      "createdBy": 2,
+      "image": "https://ymcasouthflorida.org/wp-content/uploads/2019/12/AA2I8910-scaled.jpg",
+      "id": 4
     },
     {
       "title": "zumba",
@@ -78,8 +77,8 @@
     {
       "title": "Pokemon Go",
       "description": "Gotta Catch 'em all!",
-      "startTime": "2023-12-21T08:47:00.000Z",
-      "endTime": "2023-12-21T15:00:00.000Z",
+      "startTime": "2023-12-21T09:00",
+      "endTime": "2023-12-21T15:00",
       "categoryIds": [
         2,
         3
