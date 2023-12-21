@@ -13,6 +13,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import EditEvent from "../components/EditEvent";
 import DeleteEvent from "../components/DeleteEvent";
+import { formatDateTime } from "../utils/Formatting";
 
 export const loader = async ({ params }) => {
   const categoriesResponse = await fetch("http://localhost:3000/categories");
@@ -152,10 +153,10 @@ const EventPage = () => {
 
         <Flex direction={{ base: "column", md: "row" }} mb="4">
           <Box
-            bg="blackAlpha.50" // Achtergrondkleur voor het linkerblok
+            bg="blackAlpha.50"
             p="5"
             borderRadius="md"
-            flex="2" // Breedte van het linkerblok
+            flex="2"
             boxShadow="md"
             mb={{ base: "4", md: "0" }}
           >
@@ -166,38 +167,16 @@ const EventPage = () => {
               <Text fontWeight="bold">Starts:</Text>
               <Text>
                 {event?.startTime
-                  ? new Date(event.startTime).toLocaleString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
+                  ? formatDateTime(event.startTime, " at ")
                   : "Not specified"}
-                {" at "}
-                {event?.startTime &&
-                  new Date(event.startTime).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
               </Text>
               <Text fontWeight="bold" mt="4">
                 Ends:
               </Text>
               <Text mb="3">
                 {event?.endTime
-                  ? new Date(event.endTime).toLocaleString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
+                  ? formatDateTime(event.endTime, " at ")
                   : "Not specified"}
-                {" at "}
-                {event?.endTime &&
-                  new Date(event.endTime).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
               </Text>
               <HStack spacing="1" mt="4">
                 {event?.categoryIds &&
@@ -217,10 +196,10 @@ const EventPage = () => {
           </Box>
 
           <Box
-            bg="blackAlpha.50" // Achtergrondkleur voor het rechterblok
+            bg="blackAlpha.50"
             p={4}
             borderRadius="md"
-            flex="1" // Breedte van het rechterblok
+            flex="1"
             mt={{ base: "4", md: "0" }}
             ml={{ base: "0", md: "4" }}
             boxShadow="md"
