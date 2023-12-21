@@ -1,23 +1,7 @@
 import React from "react";
 import { Box, Heading, Text, HStack, Tag, Center } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
-const formatDate = (dateTimeString) => {
-  const options = {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  };
-  const date = new Date(dateTimeString);
-  return date.toLocaleDateString(options).replace(/\//g, "-");
-};
-
-const formatTime = (dateTimeString) => {
-  const date = new Date(dateTimeString);
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  return `${hours}:${minutes}`;
-};
+import { formatDateTime } from "../utils/Formatting";
 
 const EventCard = ({ event, categories }) => {
   return (
@@ -26,20 +10,20 @@ const EventCard = ({ event, categories }) => {
         key={event.id}
         borderWidth="1px"
         borderRadius="md"
-        p="0" // Set padding to 0
+        p="0"
         mt="4"
-        w="100%" // Set width to 100%
+        w="100%"
         bg="blackAlpha.50"
-        overflow="hidden" // Hide any overflow content
+        overflow="hidden"
         transition="transform 0.2s"
-        _hover={{ transform: "scale(1.05)" }} // Add a slight scale effect on hover
+        _hover={{ transform: "scale(1.05)" }}
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
       >
         <Box
-          boxSize="100%" // Set width to 100%
-          h="250px" // Increased height
+          boxSize="100%"
+          h="250px"
           bgImage={`url(${event.image})`}
           bgSize="cover"
           bgPosition="center"
@@ -53,19 +37,14 @@ const EventCard = ({ event, categories }) => {
             {event.description}
           </Text>
           <HStack justify="center" spacing="10" mt="6" mb="5">
-            <Text>
-              {formatDate(event.startTime)} <br />
-              {formatTime(event.startTime)}
-            </Text>
+            <Text>{formatDateTime(event.startTime)}</Text>
             <Text fontSize="2xl" fontWeight="bold" color="teal.500">
               -
             </Text>
-            <Text>
-              {formatDate(event.endTime)} <br /> {formatTime(event.endTime)}
-            </Text>
+            <Text>{formatDateTime(event.endTime)}</Text>
           </HStack>
           <Center>
-            <HStack spacing="1" mt="4">
+            <HStack spacing="4" mt="4" justify="center" align="center">
               {event.categoryIds &&
                 event.categoryIds.map((categoryId) => {
                   const category = categories.find(
