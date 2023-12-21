@@ -1,6 +1,6 @@
-import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root, loader as rootLoader } from "./components/Root";
 import EventsPage, { loader as postListLoader } from "./pages/EventsPage";
@@ -12,21 +12,12 @@ const router = createBrowserRouter([
     element: <Root />,
     loader: rootLoader,
     children: [
-      {
-        path: "/",
-        element: <EventsPage />,
-        loader: postListLoader,
-      },
-      {
-        path: "/event/:eventId",
-        element: <EventPage />,
-        loader: postLoader,
-      },
+      { path: "/", element: <EventsPage />, loader: postListLoader },
+      { path: "/event/:eventId", element: <EventPage />, loader: postLoader },
     ],
   },
 ]);
 
-// @ts-ignore
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider>
